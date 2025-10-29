@@ -1,6 +1,7 @@
 import { useState, useRef, useContext } from "react";
 import AuthContext from "../../store/AuthContext";
 import classes from "./AuthForm.module.css";
+import { useNavigate } from "react-router-dom";
 
 const AuthForm = () => {
   const emailInputRef = useRef();
@@ -8,13 +9,14 @@ const AuthForm = () => {
   const confirmPasswordInputRef = useRef();
 
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [error, setError] = useState();
 
-  const swithcAuthModeHandler = () => {
+  const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
 
@@ -23,32 +25,31 @@ const AuthForm = () => {
 
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
-    const enteredPassword2 = confirmPasswordInputRef.current.value;
-
-    if (
+    
+    if (!isLogin){
+      const enteredPassword2 = confirmPasswordInputRef.current.value;
+if(
       enteredEmail &&
       enteredPassword &&
       enteredPassword2 &&
       enteredPassword === enteredPassword2
     ) {
       setIsFormValid(true);
-    } else {
-      if (enteredPassword !== enteredPassword2) {
+    } else if (enteredPassword !== enteredPassword2) {
         setError("Passwords didn't match");
         console.log("Passwords didn't match");
       } else {
         setError("All Fields Are Required");
         console.log("All Fields Are Required");
       }
-      return;
     }
 
     setIsLoading(true);
     let URL;
-    if (isLogin && isFormValid) {
+    if (isLogin) {
       URL =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAa1oVJ9j-mWsgn2FGPdp4RStUzpBA4kq4";
-    } else {
+    } else if(isFormValid){
       URL =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAa1oVJ9j-mWsgn2FGPdp4RStUzpBA4kq4";
     }
@@ -77,6 +78,7 @@ const AuthForm = () => {
       })
       .then((data) => {
         authCtx.login(data.idToken);
+        navigate("/");
       })
       .catch((err) => {
         alert(err.message);
@@ -89,7 +91,7 @@ const AuthForm = () => {
       <h1>{isLogin ? "Login" : "Sign Up"}</h1>
       <form onSubmit={submitHandler}>
         <div className={classes.control}>
-          <label htmlForm="email">Email</label>
+          <label htmlFor="email">Email</label>
           <input type="email" id="email" required ref={emailInputRef} />
         </div>
         <div className={classes.control}>
@@ -117,7 +119,7 @@ const AuthForm = () => {
               <input
                 type="password"
                 id="confirmPassword"
-                rerquired
+                required
                 ref={confirmPasswordInputRef}
               />
             </div>
@@ -131,7 +133,7 @@ const AuthForm = () => {
           <button
             type="button"
             className={classes.toggle}
-            onClick={swithcAuthModeHandler}
+            onClick={switchAuthModeHandler}
           >
             {isLogin ? "Create new account" : "have an account? Login"}
           </button>
