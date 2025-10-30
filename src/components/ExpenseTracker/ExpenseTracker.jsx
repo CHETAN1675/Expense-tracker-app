@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ExpenseList from "./ExpenseList";
 import "./ExpenseTracker.css";
+import ExpenseContext from "../../store/ExpenseContext";
 
 const ExpenseTracker = ()=>{
   const [moneyspent,setMoneySpent] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [expenses,setExpenses] = useState([]);
+
+  const expenseCtx = useContext(ExpenseContext);
+
+  useEffect(()=>{
+    expenseCtx.fetchExpense();
+  },[])
 
   const expenseSubmitHandler=(e)=>{
     e.preventDefault();
@@ -16,7 +23,7 @@ const ExpenseTracker = ()=>{
         description,
         category
     };
-
+expenseCtx.addExpense(newExpense);
     setExpenses([...expenses,newExpense]);
 
     setMoneySpent("");
@@ -66,10 +73,8 @@ const ExpenseTracker = ()=>{
            </label>
            <br/>
            <button className="form-button" type="submit">Add Expense</button>
-
-           <ExpenseList expenses={expenses}/>
     </form>
-    
+     <ExpenseList expenses={expenseCtx.expenses}/>
 </div>
     )
 };

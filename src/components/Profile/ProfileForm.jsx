@@ -84,7 +84,7 @@ const ProfileForm = () => {
           <label htmlFor="photot-url">Profile Photo URL</label>
           <input
             type="text"
-            id="photot-url"
+            id="photo-url"
             ref={profileUrlInputRef}
             required
           />
