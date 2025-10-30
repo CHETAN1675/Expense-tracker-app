@@ -2,6 +2,7 @@ import { useContext } from "react";
 import AuthContext from "../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import classes from "./HomePage.module.css";
+import ExpenseTracker from "../components/ExpenseTracker/ExpenseTracker";
 
 const HomePage = () => {
  const authCtx = useContext(AuthContext);
@@ -14,6 +15,7 @@ const HomePage = () => {
  return(
   <>
   {authCtx.isLoggedIn?(
+    <div>
     <section className={classes.starting}>
     <p>Welcome to Expense Tracker</p>
     <div className={classes.profile}>
@@ -21,6 +23,8 @@ const HomePage = () => {
       <button onClick={profileHandler}>Complete Now</button>
     </div>
     </section>
+    <ExpenseTracker/>
+    </div>
   ):(
     <h1>Welcome to Expense Tracker!!!</h1>
   )}
