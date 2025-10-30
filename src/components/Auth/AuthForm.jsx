@@ -1,7 +1,7 @@
 import { useState, useRef, useContext } from "react";
 import AuthContext from "../../store/AuthContext";
 import classes from "./AuthForm.module.css";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import VerifyEmail from "./VerifyEmail";
 
 const AuthForm = () => {
@@ -132,6 +132,11 @@ if(
             </div>
           )}
         </div>
+        {isLogin && (
+          <div className={classes.link}>
+            <Link to="/forget-password">Forgot Password?</Link>
+          </div>
+        )}
         <div className={classes.actions}>
           {!isLoading && (
             <button>{isLogin ? "Login" : "Create Account"}</button>
