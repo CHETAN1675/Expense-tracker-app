@@ -78,7 +78,7 @@ if(
         }
       })
       .then((data) => {
-        authCtx.login(data.idToken);
+        authCtx.login(data.idToken, data.email);
         
       })
       .catch((err) => {

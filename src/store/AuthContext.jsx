@@ -1,7 +1,11 @@
-import { createContext,useEffect,useState } from "react";
+import { createContext, useEffect,useState } from "react";
+import { useDispatch } from "react-redux";
+import { authActions } from "./auth-slice";
+
 
 const AuthContext = createContext({
     token:"",
+    email: "",
     isLoggedIn:false,
     login:(token)=>{},
     logout:()=>{},
@@ -9,18 +13,32 @@ const AuthContext = createContext({
 
 export const AuthContextProvider = (props)=>{
     const intialState = localStorage.getItem("token");
-const [token,setToken] = useState(intialState);
+    const initialEmail = localStorage.getItem("email");
+    const [token,setToken] = useState(intialState);
+    const [email, setEmail] = useState(initialEmail);
+//this is redux dispatch
+     const dispatch = useDispatch();
+     const userIsLoggedIn = !!token;
 
-const userIsLoggedIn = !!token;
+const LoginHandler = (token,email)=>{
+  setToken(token)
+  setEmail(email);
+  localStorage.setItem("token",token);
+  localStorage.setItem("email", email);
 
-const LoginHandler = (token)=>{
-setToken(token)
-localStorage.setItem("token",token);
+   //dispatch actions
+    dispatch(authActions.login({ email: email, token: token }));
 };
 
+
 const LogoutHandler = ()=>{
-    setToken(null)
-    localStorage.removeItem("token");
+      setToken(null)
+      setEmail(null);
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+
+      //dispatch actions
+    dispatch(authActions.logout());
 };
 
 useEffect(()=>{
@@ -38,6 +56,7 @@ return()=> clearTimeout(logoutTimer);
 
 const contextValue  ={
     token:token,
+    email: email,
     isLoggedIn:userIsLoggedIn,
     login:LoginHandler,
     logout:LogoutHandler,

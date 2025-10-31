@@ -40,10 +40,10 @@ const ForgetPassword = ()=>{
 
 
     return(
-<div>
-    <div>
+<div className="forget-password">
+    <div className="control">
         <label htmlFor="email">Email</label>
-        <input type="email"  id="email" ref= {emailInputRef} />
+        <input type="email"  id="email" ref= {emailInputRef} required/>
     </div>
     <button onClick={passwordHandler}>Reset Passowrd</button>
 </div>
