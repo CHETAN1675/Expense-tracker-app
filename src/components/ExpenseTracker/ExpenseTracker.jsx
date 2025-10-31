@@ -4,10 +4,11 @@ import "./ExpenseTracker.css";
 import ExpenseContext from "../../store/ExpenseContext";
 
 const ExpenseTracker = ()=>{
-  const [moneyspent,setMoneySpent] = useState("");
+  const [moneySpent,setMoneySpent] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [expenses,setExpenses] = useState([]);
+   const [editExpense, setEditExpense] = useState(false);
+  const [editExpenseId, setEditExpenseId] = useState(null);
 
   const expenseCtx = useContext(ExpenseContext);
 
@@ -15,16 +16,41 @@ const ExpenseTracker = ()=>{
     expenseCtx.fetchExpense();
   },[])
 
+    const onEditExpense = (expense) => {
+    setEditExpense(true);
+    setMoneySpent(expense.moneySpent);
+    setDescription(expense.description);
+    setCategory(expense.category);
+    setEditExpenseId(expense.id);
+  };
+
+   const editExpenseHandler = (event) => {
+    event.preventDefault();
+
+    const editExpense = {
+      id: editExpenseId,
+      moneySpent,
+      description,
+      category,
+    };
+
+    setMoneySpent("");
+    setDescription("");
+    setCategory("");
+    setEditExpense(false);
+
+    expenseCtx.updateExpense(editExpense);
+  };
+
   const expenseSubmitHandler=(e)=>{
     e.preventDefault();
 
     const newExpense ={
-        moneyspent,
+        moneySpent,
         description,
         category
     };
 expenseCtx.addExpense(newExpense);
-    setExpenses([...expenses,newExpense]);
 
     setMoneySpent("");
     setDescription("");
@@ -34,13 +60,13 @@ expenseCtx.addExpense(newExpense);
     return(
 <div className="expense-tracker">
     <h2 className="header">Expense Tracker</h2>
-    <form className="expense-form" onSubmit={expenseSubmitHandler}>
+    <form className="expense-form" >
         <label className="form-label">
             Money Spent:
         <input
         className="form-input"
         type ="text"
-        value={moneyspent}
+        value={moneySpent}
         onChange={(e)=>setMoneySpent(e.target.value)}
         required
          />
@@ -72,9 +98,14 @@ expenseCtx.addExpense(newExpense);
            </select>
            </label>
            <br/>
-           <button className="form-button" type="submit">Add Expense</button>
+           <button className="form-button" type="button"
+           onClick={editExpense ? editExpenseHandler : expenseSubmitHandler}
+           > {editExpense ? "Edit Expense" : "Add Expense"}</button>
     </form>
-     <ExpenseList expenses={expenseCtx.expenses}/>
+     <ExpenseList 
+     expenses={expenseCtx.expenses}
+           onEditExpense={onEditExpense}
+           />
 </div>
     )
 };
