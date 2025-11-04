@@ -22,12 +22,14 @@ export const ExpenseContextProvider= (props)=>{
     userEmail = userEmail.replace(/[^a-zA-Z0-9]/g, "");
   }
 
-  const api ="https://expense-tracker-auth-app-default-rtdb.firebaseio.com/";
+  const api ="https://expense-tracker-auth-app-default-rtdb.firebaseio.com";
 
   const fetchExpenseHandler = async () => {
 
     if (userEmail) {
-      const url = `${api}/expenses${userEmail}.json`;
+      const url = `${api}/expenses/${userEmail}.json`;
+     
+    
 
       try {
         const response = await fetch(url);
@@ -35,7 +37,7 @@ export const ExpenseContextProvider= (props)=>{
           throw new Error("Failed to fetch expense data");
         }
         const data = await response.json();
-
+          console.log("FETCHED DATA:", data); 
         const expenseList = Object.keys(data).map((expenseId) => {
           const expense = data[expenseId];
           return {
@@ -59,7 +61,11 @@ export const ExpenseContextProvider= (props)=>{
   const addExpenseHandler = (item) => {
     
     if (userEmail) {
-      const url = `${api}/expenses${userEmail}.json`;
+      const url = `${api}/expenses/${userEmail}.json`;
+
+      console.log("POST URL:", url);
+console.log("POST BODY:", item);
+
       fetch(url, {
         method: "POST",
         headers: {
@@ -90,7 +96,7 @@ export const ExpenseContextProvider= (props)=>{
 
   const updateExpenseHandler = (updatedExpense)=>{
     if(userEmail){
-      const url = `${api}/expenses${userEmail}/${updatedExpense.id}.json`;
+      const url = `${api}/expenses/${userEmail}/${updatedExpense.id}.json`;
       fetch(url,{
         method:"PUT",
         headers:{
@@ -117,24 +123,25 @@ export const ExpenseContextProvider= (props)=>{
         })
         .catch((error) => {
           console.error(error);
-      })
+      });
     }
-  }
+  };
 
     const removeExpenseHandler= (expenseId)=>{
       if(userEmail){
-        const url = `${api}/expenses${userEmail}/${expenseId}.json`;
+        const url = `${api}/expenses/${userEmail}/${expenseId}.json`;
         fetch(url,{
           method:"DELETE",
         headers:{
           "Content-Type": "application/json",
-        }
+        },
+      })
          .then((response)=>{
           if(response.ok){
             console.log("Expense successfully deleted");
             //remove expense from expenseItems
             setExpenseItems((prevExpenseItems)=>
-              prevExpenseItems.filter((expense)=>{expense.id !== expenseId})
+              prevExpenseItems.filter((expense)=>expense.id !== expenseId)
             );
                         //dispatch actions
             dispatch(expenseActions.removeItem({ id: expenseId }));
@@ -145,8 +152,7 @@ export const ExpenseContextProvider= (props)=>{
         })
         .catch((error)=>{
           console.log(error);
-        })
-        })
+        });
       }
     };
 

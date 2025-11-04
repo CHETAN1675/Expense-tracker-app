@@ -5,32 +5,38 @@ import UserProfile from "./components/Profile/UserProfile";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 import { BrowserRouter as Router } from "react-router-dom";
-import { AuthContextProvider } from "./store/AuthContext";
-import AuthContext from "./store/AuthContext";
-import { useContext } from "react";
+import AuthContext, { AuthContextProvider } from "./store/AuthContext";
 import ForgetPassword from "./components/Auth/ForgetPassword";
 import { ExpenseContextProvider } from "./store/ExpenseContext";
+import { useContext } from "react";
+import { useSelector } from "react-redux";
+
+
 
 function App() {
-  const authCtx = useContext(AuthContext);
+
+const authCtx = useContext(AuthContext)
+const isDarkMode = useSelector((state)=>state.theme.isDark);
 
   return (
+    <div className = {`${isDarkMode ? "darkTheme":""}`}>
     <ExpenseContextProvider>
     <AuthContextProvider>
       <Router>
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {!authCtx.isLoggedIn && (
-              <Route path="/auth" element={<AuthPage />} />
+            {!authCtx.isLoggedIn &&(
+               <Route path="/auth" element={<AuthPage />} />
             )}
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/forget-password" element= {<ForgetPassword/>}/>
           </Routes>
         </Layout>
       </Router>
-    </AuthContextProvider>
+     </AuthContextProvider>
    </ExpenseContextProvider>
+  </div>
   );
 }
 

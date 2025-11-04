@@ -1,9 +1,14 @@
-import { useContext } from "react";
+import { useContext,useEffect } from "react";
 import ExpenseContext from "../../store/ExpenseContext";
 import "./ExpenseList.css";
 
 const ExpenseList = (props) => {
   const expenseCtx = useContext(ExpenseContext);
+   useEffect(() => {
+    // Fetch expenses from Firebase when component mounts
+    expenseCtx.fetchExpense();
+    
+  }, [expenseCtx]);
 
   const deleteHandler = (expenseId) => {
     expenseCtx.removeExpense(expenseId);

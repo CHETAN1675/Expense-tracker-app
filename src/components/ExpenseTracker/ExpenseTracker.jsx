@@ -4,24 +4,30 @@ import ExpenseList from "./ExpenseList";
 import "./ExpenseTracker.css";
 import ExpenseContext from "../../store/ExpenseContext";
 
-const ExpenseTracker = ()=>{
+const ExpenseTracker = ({ onTotalExpenseChange })=>{
   const [moneySpent,setMoneySpent] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
    const [editExpense, setEditExpense] = useState(false);
   const [editExpenseId, setEditExpenseId] = useState(null);
 
-  //redux items
+    const expenseCtx = useContext(ExpenseContext);
    const items = useSelector((state) => state.expenseStore.items);
+
   const totalPrice = items.reduce(
-    (total, item) => total + Number(item.moneySpent),
-    0
-  );
-  const expenseCtx = useContext(ExpenseContext);
+    (total, item) => total + Number(item.moneySpent),0);
+
 
   useEffect(()=>{
     expenseCtx.fetchExpense();
-  },[])
+  },[]);
+
+    // Pass total expense to HomePage
+  useEffect(() => {
+    if (onTotalExpenseChange) {
+      onTotalExpenseChange(totalPrice);
+    }
+  }, [totalPrice, onTotalExpenseChange]);
 
     const onEditExpense = (expense) => {
     setEditExpense(true);
@@ -105,7 +111,7 @@ expenseCtx.addExpense(newExpense);
            </select>
            </label>
            <br/>
-           <button className="form-button" type="button"
+           <button className="form-button" type="submit"
            onClick={editExpense ? editExpenseHandler : expenseSubmitHandler}
            > {editExpense ? "Edit Expense" : "Add Expense"}</button>
     </form>

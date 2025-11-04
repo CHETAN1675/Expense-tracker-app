@@ -52,3 +52,22 @@
   background-color: #c291e2;
   color: #38015c;
 }
+
+.downloadButton {
+  font: inherit;
+  background-color: #28a745; 
+  color: white;              
+  border: 1px solid #28a745; 
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none; 
+  display: inline-block; 
+}
+
+.downloadButton:hover {
+  background-color: #218838; 
+  border-color: #1e7e34;
+  color: white;
+}
