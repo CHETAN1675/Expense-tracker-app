@@ -122,7 +122,7 @@ if(
                 required
                 ref={passwordInputRef}
               />
-              <label htmlFor="password">confirm Password</label>
+              <label htmlFor="confirmpassword">confirm Password</label>
               <input
                 type="password"
                 id="confirmPassword"

@@ -1,4 +1,4 @@
-import { use, useContext } from "react";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import classes from "./MainNavigation.module.css";

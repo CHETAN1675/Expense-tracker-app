@@ -81,7 +81,7 @@ const ProfileForm = () => {
           <input type="text" id="full-name" ref={fullNameInputRef} required />
         </div>
         <div className={classes.control}>
-          <label htmlFor="photot-url">Profile Photo URL</label>
+          <label htmlFor="photo-url">Profile Photo URL</label>
           <input
             type="text"
             id="photo-url"

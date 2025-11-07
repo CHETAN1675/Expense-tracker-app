@@ -7,6 +7,6 @@ export default defineConfig({
    test: {
     globals: true,   // allows using 'describe', 'it', 'expect' without imports
     environment: 'jsdom', // simulates browser environment
-    setupFiles: './src/setupTests.js', // optional for setup like jest-dom
+    setupFiles: './src/vitest.setup.jsx', // optional for setup like jest-dom
   },
 })
