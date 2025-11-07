@@ -37,7 +37,8 @@ export const ExpenseContextProvider= (props)=>{
           throw new Error("Failed to fetch expense data");
         }
         const data = await response.json();
-          console.log("FETCHED DATA:", data); 
+
+          
         const expenseList = Object.keys(data).map((expenseId) => {
           const expense = data[expenseId];
           return {

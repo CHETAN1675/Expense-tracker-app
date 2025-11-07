@@ -8,7 +8,7 @@ const ExpenseList = (props) => {
     // Fetch expenses from Firebase when component mounts
     expenseCtx.fetchExpense();
     
-  }, [expenseCtx]);
+  }, []);
 
   const deleteHandler = (expenseId) => {
     expenseCtx.removeExpense(expenseId);

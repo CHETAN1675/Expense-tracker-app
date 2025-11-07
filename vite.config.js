@@ -4,4 +4,9 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+   test: {
+    globals: true,   // allows using 'describe', 'it', 'expect' without imports
+    environment: 'jsdom', // simulates browser environment
+    setupFiles: './src/setupTests.js', // optional for setup like jest-dom
+  },
 })

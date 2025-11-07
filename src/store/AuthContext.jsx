@@ -18,6 +18,7 @@ export const AuthContextProvider = (props)=>{
     const [email, setEmail] = useState(initialEmail);
 //this is redux dispatch
      const dispatch = useDispatch();
+
      const userIsLoggedIn = !!token;
 
 const LoginHandler = (token,email)=>{
@@ -48,7 +49,7 @@ if(userIsLoggedIn){
     logoutTimer = setTimeout(()=>{
         LogoutHandler();
         alert("You have been logged out due to inactivity.");
-    },5*60*1000);
+    },60*60*1000);
 }
 
 return()=> clearTimeout(logoutTimer);
