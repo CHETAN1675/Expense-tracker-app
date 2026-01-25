@@ -1,109 +1,97 @@
-import { useState, useRef, useContext } from "react";
-import AuthContext from "../../store/AuthContext";
+import { useState, useRef } from "react";
 import classes from "./AuthForm.module.css";
-import {Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import VerifyEmail from "./VerifyEmail";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../store/auth-slice";
 
 const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const confirmPasswordInputRef = useRef();
 
-  const authCtx = useContext(AuthContext);
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [error, setError] = useState();
+  const [error, setError] = useState(null);
 
   const switchAuthModeHandler = () => {
-    setIsLogin((prevState) => !prevState);
+    setIsLogin((prev) => !prev);
+    setError(null);
   };
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
 
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
-    
-    if (!isLogin){
-      const enteredPassword2 = confirmPasswordInputRef.current.value;
-if(
-      enteredEmail &&
-      enteredPassword &&
-      enteredPassword2 &&
-      enteredPassword === enteredPassword2
-    ) {
-      setIsFormValid(true);
-    } else if (enteredPassword !== enteredPassword2) {
+    const email = emailInputRef.current.value;
+    const password = passwordInputRef.current.value;
+
+    if (!isLogin) {
+      const confirmPassword = confirmPasswordInputRef.current.value;
+      if (password !== confirmPassword) {
         setError("Passwords didn't match");
-        console.log("Passwords didn't match");
-      } else {
-        setError("All Fields Are Required");
-        console.log("All Fields Are Required");
+        return;
       }
     }
 
     setIsLoading(true);
-    let URL;
-    if (isLogin) {
-      URL =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAa1oVJ9j-mWsgn2FGPdp4RStUzpBA4kq4";
-    } else if(isFormValid){
-      URL =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAa1oVJ9j-mWsgn2FGPdp4RStUzpBA4kq4";
-    }
-    fetch(URL, {
-      method: "POST",
-      body: JSON.stringify({
-        email: enteredEmail,
-        password: enteredPassword,
-        returnSecureToken: true,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        setIsLoading(false);
-        if (res.ok) {
-          console.log("user created");
-          return res.json();
-        } else {
-          return res.json().then((data) => {
-            let errorMessage = "Authentication failed!";
-            throw new Error(errorMessage);
-          });
-        }
-      })
-      .then((data) => {
-        authCtx.login(data.idToken, data.email);
-        
-      })
-      .catch((err) => {
-        alert(err.message);
+    setError(null);
+
+    const url = isLogin
+      ? "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAa1oVJ9j-mWsgn2FGPdp4RStUzpBA4kq4"
+      : "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAa1oVJ9j-mWsgn2FGPdp4RStUzpBA4kq4";
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      if (!res.ok) {
+        throw new Error("Authentication failed");
+      }
+
+      const data = await res.json();
+
+      dispatch(
+        authActions.login({
+          token: data.idToken,
+          email: data.email,
+        })
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+
+    setIsLoading(false);
   };
 
   return (
     <section className={classes.auth}>
-      {authCtx.isLoggedIn ?(
-        <VerifyEmail/>
-      ): (
+      {isLoggedIn ? (
+        <VerifyEmail />
+      ) : (
         <div>
-      {error && (
-        <p style={{ color: "red", textAlign: "start" }}>*{error}</p>
-      )}
-      <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-      <form onSubmit={submitHandler}>
-        <div className={classes.control}>
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" required ref={emailInputRef} />
-        </div>
-        <div className={classes.control}>
-          {isLogin && (
-            <div>
+          {error && (
+            <p style={{ color: "red", textAlign: "start" }}>*{error}</p>
+          )}
+          <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+          <form onSubmit={submitHandler}>
+            <div className={classes.control}>
+              <label htmlFor="email">Email</label>
+              <input type="email" id="email" required ref={emailInputRef} />
+            </div>
+
+            <div className={classes.control}>
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -112,46 +100,40 @@ if(
                 ref={passwordInputRef}
               />
             </div>
-          )}
-          {!isLogin && (
-            <div>
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                required
-                ref={passwordInputRef}
-              />
-              <label htmlFor="confirmpassword">confirm Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                required
-                ref={confirmPasswordInputRef}
-              />
+
+            {!isLogin && (
+              <div className={classes.control}>
+                <label htmlFor="confirmPassword">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  required
+                  ref={confirmPasswordInputRef}
+                />
+              </div>
+            )}
+
+            {isLogin && (
+              <div className={classes.link}>
+                <Link to="/forget-password">Forgot Password?</Link>
+              </div>
+            )}
+
+            <div className={classes.actions}>
+              {!isLoading && (
+                <button>{isLogin ? "Login" : "Create Account"}</button>
+              )}
+              {isLoading && <p>Sending request...</p>}
+              <button
+                type="button"
+                className={classes.toggle}
+                onClick={switchAuthModeHandler}
+              >
+                {isLogin ? "Create new account" : "have an account? Login"}
+              </button>
             </div>
-          )}
+          </form>
         </div>
-        {isLogin && (
-          <div className={classes.link}>
-            <Link to="/forget-password">Forgot Password?</Link>
-          </div>
-        )}
-        <div className={classes.actions}>
-          {!isLoading && (
-            <button>{isLogin ? "Login" : "Create Account"}</button>
-          )}
-          {isLoading && <p>Sending request...</p>}
-          <button
-            type="button"
-            className={classes.toggle}
-            onClick={switchAuthModeHandler}
-          >
-            {isLogin ? "Create new account" : "have an account? Login"}
-          </button>
-        </div>
-      </form>
-      </div>
       )}
     </section>
   );

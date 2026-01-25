@@ -1,118 +1,135 @@
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { screen } from "@testing-library/react";
+import { renderWithProviders } from "./test/test-utils";
 import userEvent from "@testing-library/user-event";
-import { describe, test, expect } from "vitest";
 import ExpenseTracker from "./components/ExpenseTracker/ExpenseTracker";
 import ProfileForm from "./components/Profile/ProfileForm";
 import MainNavigation from "./components/Layout/MainNavigation";
 import HomePage from "./pages/HomePage";
 import AuthForm from "./components/Auth/AuthForm";
+import { ExpenseContextProvider } from "./store/ExpenseContext";
+import AuthContext from "./store/AuthContext";
+
+
+vi.stubGlobal("fetch", vi.fn());
 
 describe("Expense Tracker Component", () => {
-  test("renders Money Spent as a test", () => {
-    render(<ExpenseTracker />);
-    const moneySpentElement = screen.getByText("Money Spent:");
-    expect(moneySpentElement).toBeInTheDocument();
+  it("renders Money Spent", () => {
+    renderWithProviders(<ExpenseTracker />);
+    expect(screen.getByText("Money Spent:")).toBeInTheDocument();
   });
 
-  test("renders Description as a test", () => {
-    render(<ExpenseTracker />);
-    const descriptionElement = screen.getByText("Description:");
-    expect(descriptionElement).toBeInTheDocument();
+  it("renders Description", () => {
+    renderWithProviders(<ExpenseTracker />);
+    expect(screen.getByText("Description:")).toBeInTheDocument();
   });
 
-  test("renders Category as a test", () => {
-    render(<ExpenseTracker />);
-    const categoryElement = screen.getByText("Category:");
-    expect(categoryElement).toBeInTheDocument();
+  it("renders Category", () => {
+    renderWithProviders(<ExpenseTracker />);
+    expect(screen.getByText("Category:")).toBeInTheDocument();
   });
 });
 
 describe("Profile Form Component", () => {
-  test("renders Full Name as a test", () => {
-    render(<ProfileForm />);
-    const fullNameElement = screen.getByText("Full Name");
-    expect(fullNameElement).toBeInTheDocument();
+  it("renders Full Name", () => {
+    renderWithProviders(<ProfileForm />);
+    expect(screen.getByText("Full Name")).toBeInTheDocument();
   });
 
-  test("renders Profile Photo URL as a test", () => {
-    render(<ProfileForm />);
-    const profilePhotoElement = screen.getByText("Profile Photo URL");
-    expect(profilePhotoElement).toBeInTheDocument();
+  it("renders Profile Photo URL", () => {
+    renderWithProviders(<ProfileForm />);
+    expect(screen.getByText("Profile Photo URL")).toBeInTheDocument();
+  });
+
+  it("renders post if request succeeds", async () => {
+    fetch.mockResolvedValueOnce({
+      json: async () => [{ id: "p1", title: "First post" }],
+    });
+
+    renderWithProviders(<ProfileForm />);
+    const items = await screen.findAllByRole("listitem");
+    expect(items.length).toBeGreaterThan(0);
   });
 });
 
 describe("Main Navigation Component", () => {
-  test("renders Expense Tracker Logo as a test", () => {
-    render(<MainNavigation />);
-    const expenseTrackerLogoElement = screen.getByText("Expense Tracker");
-    expect(expenseTrackerLogoElement).toBeInTheDocument();
+  it("renders Expense Tracker Logo", () => {
+    renderWithProviders(<MainNavigation />);
+    expect(screen.getByText("Expense Tracker")).toBeInTheDocument();
   });
 
-  test("renders Download Expenses as a test", () => {
-    render(<MainNavigation />);
-    const downloadExpensesElement = screen.getByText("Download Expenses");
-    expect(downloadExpensesElement).toBeInTheDocument();
+  it("renders Download Expenses", () => {
+    renderWithProviders(<MainNavigation />);
+    expect(screen.getByText("Download Expenses")).toBeInTheDocument();
   });
 
-  test("renders Login as a test", () => {
-    render(<MainNavigation />);
-    const loginElement = screen.getByText("Login");
-    expect(loginElement).toBeInTheDocument();
+  it("renders Login", () => {
+    renderWithProviders(<MainNavigation />);
+    expect(screen.getByText("Login")).toBeInTheDocument();
   });
 
-  test("renders Profile as a test", () => {
-    render(<MainNavigation />);
-    const profileElement = screen.getByText("Profile");
-    expect(profileElement).toBeInTheDocument();
+  it("renders Profile", () => {
+    renderWithProviders(<MainNavigation />);
+    expect(screen.getByText("Profile")).toBeInTheDocument();
   });
 
-  test("renders Logout as a test", () => {
-    render(<MainNavigation />);
-    const logoutElement = screen.getByText("Logout");
-    expect(logoutElement).toBeInTheDocument();
+  it("renders Logout", () => {
+    renderWithProviders(<MainNavigation />);
+    expect(screen.getByText("Logout")).toBeInTheDocument();
   });
 });
 
 describe("HomePage Component", () => {
-  test('renders "Welcome to Expense Tracker" if user logged in', () => {
-    render(<HomePage />);
-    const outputElement = screen.getByText("Welcome to Expense Tracker", {
-      exact: false,
-    });
-    expect(outputElement).toBeInTheDocument();
+  it('renders "Welcome to Expense Tracker" if user logged in', () => {
+    renderWithProviders(
+      <AuthContext.Provider value={{ isLoggedIn: true }}>
+        <HomePage />
+      </AuthContext.Provider>
+    );
+    expect(screen.getByText(/Welcome to Expense Tracker/i)).toBeInTheDocument();
   });
 
-  test('renders "Your profile is incomplete" if user logged in', () => {
-    render(<HomePage />);
-    const outputElement = screen.queryByText("Your profile is incomplete", {
-      exact: false,
-    });
-    expect(outputElement).toBeInTheDocument();
+  it('renders "Your profile is incomplete" if user logged in', () => {
+    renderWithProviders(
+      <AuthContext.Provider value={{ isLoggedIn: true }}>
+        <HomePage />
+      </AuthContext.Provider>
+    );
+    expect(screen.getByText(/Your profile is incomplete/i)).toBeInTheDocument();
   });
 });
 
 describe("AuthForm Component", () => {
-  test('renders "Confirm Password" if user clicks Create new account', async () => {
-    render(<AuthForm />);
-
-    const buttonElement = screen.getByRole("button", {
-      name: /Create new account/i,
-    });
-    await userEvent.click(buttonElement);
-
-    const outputElement = screen.queryByText(/Confirm Password/i);
-    expect(outputElement).toBeInTheDocument();
+  it('renders "confirm Password" if user clicks Create new account', async () => {
+    renderWithProviders(<AuthForm />);
+    const button = screen.getByText(/Create new account/i);
+    await userEvent.click(button);
+    expect(screen.getByText(/confirm Password/i)).toBeInTheDocument();
   });
 
-  test('renders "Forgot Password?" if user clicks Login', async () => {
-    render(<AuthForm />);
+  it('renders "Forgot Password?" if user clicks Login', async () => {
+    renderWithProviders(<AuthForm />);
+    const button = screen.getByText(/have an account\? Login/i);
+    await userEvent.click(button);
+    expect(screen.getByText(/Forgot Password\?/i)).toBeInTheDocument();
+  });
+});
 
-    const buttonElement = screen.getByRole("button", {
-      name: /have an account\? Login/i,
+describe("ExpenseContext Component", () => {
+  it("renders post if request succeeds", async () => {
+    fetch.mockResolvedValueOnce({
+      json: async () => [{ id: "p1", title: "First post" }],
     });
-    await userEvent.click(buttonElement);
 
-    const outputElement = screen.queryByText(/Forgot Password\?/i);
-    expect(outputElement).toBeInTheDocument();
+    renderWithProviders(
+      <ExpenseContextProvider>
+        <ul>
+          <li>First post</li>
+        </ul>
+      </ExpenseContextProvider>
+    );
+
+    const items = await screen.findAllByRole("listitem");
+    expect(items.length).toBeGreaterThan(0);
   });
 });

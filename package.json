@@ -8,8 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-     "test": "vitest"
-
+    "test": "vitest"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.2",
@@ -37,5 +36,3 @@
     "vitest": "^4.0.8"
   }
 }
-
-

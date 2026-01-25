@@ -1,43 +1,54 @@
-.App {
-  text-align: center;
+/* Dark theme general background and text */
+.darkTheme body,
+.darkTheme section,
+.darkTheme main,
+.darkTheme div,
+.darkTheme form {
+  background-color: #121212; /* dark background */
+  color: #e0e0e0; /* light text */
 }
 
-.darkTheme {
-  background-color: #000000;
-  color: #ac0000;
+/* Header */
+.darkTheme header {
+  background-color: #1f1f1f;
+  color: #fff;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Navigation links in header */
+.darkTheme header a,
+.darkTheme header button {
+  color: #e0e0e0;
+  border-color: #e0e0e0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.darkTheme header a:hover,
+.darkTheme header button:hover {
+  background-color: #6200ea;
+  color: #fff;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* Inputs, selects, textarea */
+.darkTheme input,
+.darkTheme select,
+.darkTheme textarea {
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #555;
 }
 
-.App-link {
-  color: #61dafb;
+/* Buttons in forms */
+.darkTheme button {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #fff;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.darkTheme button:hover {
+  background-color: #6200ea;
+  color: #fff;
+}
+
+/* Labels */
+.darkTheme label {
+  color: #fff;
 }

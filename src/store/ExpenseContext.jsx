@@ -19,7 +19,7 @@ export const ExpenseContextProvider= (props)=>{
 
     let userEmail = localStorage.getItem("email");
   if (userEmail) {
-    userEmail = userEmail.replace(/[^a-zA-Z0-9]/g, "");
+    userEmail = userEmail.replace(/[^a-zA-Z0-9]/g, "");  //regular expression(i.e regex)
   }
 
   const api ="https://expense-tracker-auth-app-default-rtdb.firebaseio.com";

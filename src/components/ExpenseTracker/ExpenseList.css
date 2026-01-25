@@ -1,9 +1,14 @@
+/* ==================== Light Theme ==================== */
 .expenses-header {
   margin-top: 20px;
+  font-size: 1.5rem;
+  color: #333;
 }
 
 .no-expenses {
   text-align: center;
+  font-style: italic;
+  color: #555;
 }
 
 .expenses-list {
@@ -12,23 +17,65 @@
 }
 
 .expense-item {
-  margin-bottom: 10px;
+  display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 10px 15px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
+  border-radius: 6px;
 }
 
 .expense-field {
   display: block;
   margin-bottom: 5px;
+  color: #333;
 }
 
-.btn{
+.btn {
   margin-top: 14px;
+  display: flex;
+  gap: 8px;
 }
 
-.btn button{
-  margin-right: 5px;
+.btn button {
+  padding: 5px 12px;
+  border: 1px solid #888;
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
 }
+
+.btn button:hover {
+  background-color: #6200ea;
+  color: #fff;
+  border-color: #6200ea;
+}
+
+/* ==================== Dark Theme ==================== */
+.darkTheme .expenses-header,
+.darkTheme .no-expenses,
+.darkTheme .expense-field {
+  color: #e0e0e0;
+}
+
+.darkTheme .expense-item {
+  background-color: #1e1e1e;
+  border: 1px solid #555;
+}
+
+.darkTheme .btn button {
+  background-color: #333;
+  color: #e0e0e0;
+  border: 1px solid #888;
+}
+
+.darkTheme .btn button:hover {
+  background-color: #6200ea;
+  color: #fff;
+  border-color: #6200ea;
+}
+

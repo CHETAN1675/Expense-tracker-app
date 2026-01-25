@@ -1,30 +1,25 @@
-import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AuthContext from "../../store/AuthContext";
 import classes from "./MainNavigation.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { CSVLink } from "react-csv";
-
+import { authActions } from "../../store/auth-slice";
+import { themeActions } from "../../store/theme-slice";
 
 const MainNavigation = () => {
-  const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
-
-  const isLoggedIn = authCtx.isLoggedIn;
   const dispatch = useDispatch();
 
-  //redux permium
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const premium = useSelector((state) => state.auth.isPremium);
+  const items = useSelector((state) => state.expenseStore.items);
+  const isDarkMode = useSelector((state) => state.theme.isDark);
 
-  const premium = useSelector((state)=>state.auth.isPremium);
-  const items = useSelector((state)=>state.expenseStore.items);
-  const isDarkMode = useSelector((state)=>state.theme.isDark);
-
-  const toggleDarkModeHandler = ()=>{
+  const toggleDarkModeHandler = () => {
     dispatch(themeActions.toggleTheme());
   };
 
   const logoutHandler = () => {
-    authCtx.logout();
+    dispatch(authActions.logout());
     navigate("/auth");
   };
 
@@ -35,16 +30,17 @@ const MainNavigation = () => {
       </Link>
       <nav>
         <ul>
-          {premium &&(
+          {premium && (
             <li>
               <button onClick={toggleDarkModeHandler}>
-                {isDarkMode ? "light Mode": "Dark Mode"}
+                {isDarkMode ? "Light Mode" : "Dark Mode"}
               </button>
               <CSVLink
-              data = {items}
-              filename={"expense.csv"}
-              className={classes.button}>
-
+                data={items}
+                filename={"expense.csv"}
+                className={classes.button}
+              >
+                Export CSV
               </CSVLink>
             </li>
           )}
