@@ -37,7 +37,7 @@ A modern **Expense Tracker Web Application** built with **React, Redux Toolkit, 
 
 * Light / Dark mode toggle
 * Persistent theme using localStorage
-* Premium users get theme unlock feature
+* Premium users get theme unlock feature(Total expense > 10,000)
 
 ---
 
