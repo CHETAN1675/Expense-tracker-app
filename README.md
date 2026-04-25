@@ -1,16 +1,116 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+# 📊 Expense Tracker App (React + Redux)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A modern **Expense Tracker Web Application** built with **React, Redux Toolkit, and Firebase**, featuring authentication, dark mode, and guest access for demo purposes.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Live Features
 
-## Expanding the ESLint configuration
+### 💰 Expense Management
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* Add, edit, and delete expenses
+* Track money spent, category, and description
+* Real-time Redux state updates
+* Firebase Realtime Database integration
+
+### 🔐 Authentication
+
+* Firebase email/password authentication
+* Login / Signup system
+* Password reset functionality
+* Email verification support
+
+### 👤 Guest Mode (Demo Access)
+
+* Click **“Continue as Guest”** on login page
+* Skip authentication flow
+* Direct access to Expense Tracker
+* No email verification required
+
+👉 **Guest users can directly click “Expense Tracker” in the navbar to explore the app**
+
+---
+
+### 🌙 Theme System
+
+* Light / Dark mode toggle
+* Persistent theme using localStorage
+* Premium users get theme unlock feature
+
+---
+
+### 📤 Export Feature
+
+* Export expenses to CSV
+* Useful for reporting and analysis
+
+---
+
+## 🧠 Tech Stack
+
+* React (Vite)
+* Redux Toolkit
+* React Router DOM
+* Firebase Realtime Database
+* Firebase Authentication
+* CSS Modules + Custom Styling
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+ ├── api/              # API layer (Firebase calls)
+ ├── components/       # UI components
+ ├── pages/            # Routes (Home, Auth, etc.)
+ ├── store/            # Redux slices
+ ├── styles/           # CSS files
+ ├── App.jsx
+ └── main.jsx
+```
+
+---
+
+
+## 🎯 Core Highlights
+
+* Fully Redux-based state management (no thunk)
+* Clean separation of API layer
+* Guest login for instant demo access
+* Premium toggle system
+* Dark mode UI
+* Firebase backend integration
+
+---
+
+## 👤 Guest Mode Instructions
+
+To explore the app without login:
+
+1. Go to Login page
+2. Click **“Continue as Guest”**
+3. Or directly click **“Expense Tracker” in navbar**
+4. Start adding and managing expenses instantly
+
+---
+
+## 📌 Future Improvements
+
+* Charts & analytics dashboard
+* Monthly expense summary
+* Mobile responsive redesign
+* Framer Motion animations
+* Role-based access control
+
+---
+
+## 📄 License
+
+This project is for educational and portfolio purposes.
+
+---
+
+
