@@ -116,7 +116,7 @@ const ProfileForm = () => {
           </button>
         </div>
       </form>
-      <div>
+      <div className={classes.profile}>
         <p>
           <strong>Name:</strong> {user.name}
         </p>

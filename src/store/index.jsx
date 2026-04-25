@@ -7,7 +7,8 @@ const store = configureStore({
   reducer: { 
     auth: authReducer,
     expenseStore: expenseReducer,
-    theme:themeReducer,},
+    theme:themeReducer,
+  },
 });
 
 export default store;

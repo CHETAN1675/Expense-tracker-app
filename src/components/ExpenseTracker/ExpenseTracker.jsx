@@ -1,126 +1,109 @@
-import { useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ExpenseList from "./ExpenseList";
 import "./ExpenseTracker.css";
-import ExpenseContext from "../../store/ExpenseContext";
+import { expenseActions } from "../../store/expense-slice";
 
-const ExpenseTracker = ({ onTotalExpenseChange })=>{
-  const [moneySpent,setMoneySpent] = useState("");
+import {
+  fetchExpensesApi,
+  addExpenseApi,
+  updateExpenseApi,
+} from "../../api/expenseApi";
+
+const ExpenseTracker = ({ onTotalExpenseChange }) => {
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.expenseStore.items);
+
+  const [moneySpent, setMoneySpent] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-   const [editExpense, setEditExpense] = useState(false);
-  const [editExpenseId, setEditExpenseId] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editId, setEditId] = useState(null);
 
-    const expenseCtx = useContext(ExpenseContext);
-   const items = useSelector((state) => state.expenseStore.items);
-
-  const totalPrice = items.reduce(
-    (total, item) => total + Number(item.moneySpent),0);
-
-
-  useEffect(()=>{
-    expenseCtx.fetchExpense();
-  },[]);
-
-    // Pass total expense to HomePage
   useEffect(() => {
-    if (onTotalExpenseChange) {
-      onTotalExpenseChange(totalPrice);
-    }
-  }, [totalPrice, onTotalExpenseChange]);
+    const loadExpenses = async () => {
+      const data = await fetchExpensesApi();
+      dispatch(expenseActions.setItems(data));
+    };
 
-    const onEditExpense = (expense) => {
-    setEditExpense(true);
+    loadExpenses();
+  }, [dispatch]);
+
+  const total = items.reduce(
+    (sum, item) => sum + Number(item.moneySpent),
+    0
+  );
+
+  useEffect(() => {
+    onTotalExpenseChange?.(total);
+  }, [total]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const expense = { moneySpent, description, category };
+
+    if (editMode) {
+      const updated = await updateExpenseApi({
+        ...expense,
+        id: editId,
+      });
+
+      dispatch(expenseActions.updateItem(updated));
+    } else {
+      const added = await addExpenseApi(expense);
+      dispatch(expenseActions.addItem(added));
+    }
+
+    setMoneySpent("");
+    setDescription("");
+    setCategory("");
+    setEditMode(false);
+  };
+
+  const editHandler = (expense) => {
+    setEditMode(true);
+    setEditId(expense.id);
     setMoneySpent(expense.moneySpent);
     setDescription(expense.description);
     setCategory(expense.category);
-    setEditExpenseId(expense.id);
   };
 
-   const editExpenseHandler = (event) => {
-    event.preventDefault();
+  return (
+    <div className="expense-tracker">
+      <h2>Expense Tracker</h2>
 
-    const editExpense = {
-      id: editExpenseId,
-      moneySpent,
-      description,
-      category,
-    };
-
-    setMoneySpent("");
-    setDescription("");
-    setCategory("");
-    setEditExpense(false);
-
-    expenseCtx.updateExpense(editExpense);
-  };
-
-  const expenseSubmitHandler=(e)=>{
-    e.preventDefault();
-
-    const newExpense ={
-        moneySpent,
-        description,
-        category
-    };
-expenseCtx.addExpense(newExpense);
-
-    setMoneySpent("");
-    setDescription("");
-    setCategory("");
-    
-  }
-    return(
-<div className="expense-tracker">
-    <h2 className="header">Expense Tracker</h2>
-    <form className="expense-form" >
-        <label className="form-label">
-            Money Spent:
+      <form onSubmit={submitHandler}>
         <input
-        className="form-input"
-        type ="text"
-        value={moneySpent}
-        onChange={(e)=>setMoneySpent(e.target.value)}
-        required
-         />
-         </label>
-         <br/>
-         <label className="form-label">
-            Description:
-            <input 
-            className="form-input"
-            type="text"
-            value={description}
-            onChange={(e)=>setDescription(e.target.value)}
-            required
-            />
-           </label>
-           <br/>
-           <label>
-            Category:
-           <select
-           className="form-select"
-           value={category}
-           onChange={(e)=> setCategory(e.target.value)}
-           required
-           >
-           <option value="">Select a Category</option>
-           <option value="Food">Food</option>
-            <option value="Petrol">Petrol</option>
-            <option value="Salary">Salary</option>
-           </select>
-           </label>
-           <br/>
-           <button className="form-button" type="submit"
-           onClick={editExpense ? editExpenseHandler : expenseSubmitHandler}
-           > {editExpense ? "Edit Expense" : "Add Expense"}</button>
-    </form>
-     <ExpenseList 
-     expenses={expenseCtx.expenses}
-           onEditExpense={onEditExpense}
-           />
-</div>
-    )
+          value={moneySpent}
+          onChange={(e) => setMoneySpent(e.target.value)}
+          placeholder="Money Spent"
+        />
+
+        <input
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Description"
+        />
+
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="">Select</option>
+          <option value="Food">Food</option>
+          <option value="Petrol">Petrol</option>
+          <option value="Salary">Salary</option>
+        </select>
+
+        <button type="submit">
+          {editMode ? "Update" : "Add"}
+        </button>
+      </form>
+
+      <ExpenseList onEdit={editHandler} expenses={items} />
+    </div>
+  );
 };
 
 export default ExpenseTracker;

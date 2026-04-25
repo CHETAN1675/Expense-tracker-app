@@ -5,7 +5,7 @@ const initialAuthState = {
   email: localStorage.getItem("email"),
   // localStorage stores strings, so we convert to boolean
   isPremium: localStorage.getItem("isPremium")==="true",
-  isLoggedIn: localStorage.getItem("isloggedIn")==="true",
+  isLoggedIn: localStorage.getItem("isLoggedIn")==="true",
 };
 
 const authSlice = createSlice({
