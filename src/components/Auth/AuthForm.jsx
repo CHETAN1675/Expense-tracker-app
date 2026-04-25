@@ -74,6 +74,15 @@ const AuthForm = () => {
 
     setIsLoading(false);
   };
+  
+  const guestLoginHandler = () => {
+  dispatch(
+    authActions.login({
+      token: "guest-token",
+      email: "guest@expenseapp.com",
+    })
+  );
+};
 
   return (
     <section className={classes.auth}>
@@ -131,6 +140,16 @@ const AuthForm = () => {
               >
                 {isLogin ? "Create new account" : "have an account? Login"}
               </button>
+              <p style={{ color: "#aaa", marginTop: "10px" }}>
+                — or —
+              </p>
+              <button
+                type="button"
+                onClick={guestLoginHandler}
+                className={classes.guest}
+                >
+                  Continue as Guest
+                </button>
             </div>
           </form>
         </div>

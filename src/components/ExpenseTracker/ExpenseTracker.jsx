@@ -20,6 +20,7 @@ const ExpenseTracker = ({ onTotalExpenseChange }) => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
+  // FETCH EXPENSES
   useEffect(() => {
     const loadExpenses = async () => {
       const data = await fetchExpensesApi();
@@ -29,6 +30,7 @@ const ExpenseTracker = ({ onTotalExpenseChange }) => {
     loadExpenses();
   }, [dispatch]);
 
+  // TOTAL CALCULATION
   const total = items.reduce(
     (sum, item) => sum + Number(item.moneySpent),
     0
@@ -36,8 +38,9 @@ const ExpenseTracker = ({ onTotalExpenseChange }) => {
 
   useEffect(() => {
     onTotalExpenseChange?.(total);
-  }, [total]);
+  }, [total, onTotalExpenseChange]);
 
+  // ADD / UPDATE EXPENSE
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -59,8 +62,10 @@ const ExpenseTracker = ({ onTotalExpenseChange }) => {
     setDescription("");
     setCategory("");
     setEditMode(false);
+    setEditId(null);
   };
 
+  // EDIT HANDLER
   const editHandler = (expense) => {
     setEditMode(true);
     setEditId(expense.id);
@@ -71,22 +76,25 @@ const ExpenseTracker = ({ onTotalExpenseChange }) => {
 
   return (
     <div className="expense-tracker">
-      <h2>Expense Tracker</h2>
+      <h2 className="header">Expense Tracker</h2>
 
-      <form onSubmit={submitHandler}>
+      <form className="expense-form" onSubmit={submitHandler}>
         <input
+          className="form-input"
           value={moneySpent}
           onChange={(e) => setMoneySpent(e.target.value)}
           placeholder="Money Spent"
         />
 
         <input
+          className="form-input"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
         />
 
         <select
+          className="form-select"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
@@ -96,8 +104,8 @@ const ExpenseTracker = ({ onTotalExpenseChange }) => {
           <option value="Salary">Salary</option>
         </select>
 
-        <button type="submit">
-          {editMode ? "Update" : "Add"}
+        <button className="form-button" type="submit">
+          {editMode ? "Update Expense" : "Add Expense"}
         </button>
       </form>
 

@@ -76,3 +76,22 @@
   text-decoration: none;
   color: antiquewhite;
 }
+
+.guest {
+  margin-top: 1.5rem;
+  cursor: pointer;
+  font: inherit;
+  color: white;
+  background-color: #2e7d32; /* green for guest action */
+  border: 1px solid #2e7d32;
+  border-radius: 4px;
+  padding: 0.5rem 2.5rem;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+  opacity: 0.95;
+}
+
+.guest:hover {
+  background-color: #1b5e20;
+  border-color: #1b5e20;
+}

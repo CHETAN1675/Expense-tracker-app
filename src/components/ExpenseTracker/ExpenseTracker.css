@@ -1,39 +1,65 @@
 .expense-tracker {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  width: 400px;
+  max-width: 520px;
+  margin: 40px auto;
+  padding: 24px;
+  font-family: "Inter", Arial, sans-serif;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #222;
 }
 
-.expense-form .form-label {
-  display: block;
-  margin-bottom: 10px;
+/* FORM */
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.expense-form .form-input {
-  width: 95%;
-  padding: 8px;
-  font-size: 14px;
-}
-
-.expense-form .form-select {
+/* INPUTS */
+.form-input,
+.form-select {
   width: 100%;
-  padding: 8px;
+  padding: 10px 12px;
   font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  background: #fafafa;
+  transition: all 0.2s ease;
 }
 
-.expense-form .form-button {
-  display: block;
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #4caf50;
+.form-input:focus,
+.form-select:focus {
+  border-color: #6200ea;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+}
+
+/* BUTTON */
+.form-button {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #6200ea, #7c4dff);
   color: #fff;
   border: none;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(98, 0, 234, 0.25);
+}
+
+.form-button:active {
+  transform: scale(0.98);
 }

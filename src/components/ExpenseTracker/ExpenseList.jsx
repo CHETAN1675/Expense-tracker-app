@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { expenseActions } from "../../store/expense-slice";
 import { deleteExpenseApi } from "../../api/expenseApi";
+import "./ExpenseList.css";
 
 const ExpenseList = ({ expenses, onEdit }) => {
   const dispatch = useDispatch();
@@ -11,19 +12,38 @@ const ExpenseList = ({ expenses, onEdit }) => {
   };
 
   return (
-    <ul>
-      {expenses.map((exp) => (
-        <li key={exp.id}>
-          {exp.description} - {exp.moneySpent}
+    <div>
+      <h3 className="expenses-header">Expenses</h3>
 
-          <button onClick={() => deleteHandler(exp.id)}>
-            Delete
-          </button>
+      {expenses.length === 0 ? (
+        <p className="no-expenses">No expenses found</p>
+      ) : (
+        <ul className="expenses-list">
+          {expenses.map((exp) => (
+            <li key={exp.id} className="expense-item">
+              <div>
+                <div className="expense-field">
+                  {exp.description}
+                </div>
+                <div className="expense-field">
+                  ₹ {exp.moneySpent}
+                </div>
+              </div>
 
-          <button onClick={() => onEdit(exp)}>Edit</button>
-        </li>
-      ))}
-    </ul>
+              <div className="btn">
+                <button onClick={() => deleteHandler(exp.id)}>
+                  Delete
+                </button>
+
+                <button onClick={() => onEdit(exp)}>
+                  Edit
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 
